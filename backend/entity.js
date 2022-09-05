@@ -1,7 +1,7 @@
 let users = [];
 
-const addUser = ({ id, user, room }) => {
-    
+const addUser = ({ id, user, room , /* publicKey */}) => {
+
     user = user.trim().toLowerCase();
     room = room.trim().toLowerCase();
 
@@ -20,8 +20,6 @@ const addUser = ({ id, user, room }) => {
     const response = { id, user, room }
 
     users.push(response)
-
-    console.log("users: ", users)
 
     return { response };
 }
