@@ -1,31 +1,32 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./login.css";
 import { Link } from "react-router-dom";
-import {ethers} from "ethers";
-import crypto from "crypto";
+import { ethers } from "ethers";
+import axios from "axios";
 
 const Login = () => {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
 
   useEffect(() => {
-    const address = localStorage.getItem("name");
+    const address = localStorage.getItem("wallet");
     console.log(address)
     setName(address);
-  },[]);
+  }, []);
 
   const genrateNewWallet = async (e) => {
     e.preventDefault();
-    
-    // console.log("gernrate wallet");
-    // const id = crypto.randomBytes(32).toString('hex');
-    // const privateKey = "0x"+id;
-    // console.log("SAVE BUT DO NOT SHARE THIS:", privateKey);
-    // const wallet = new ethers.Wallet(privateKey);
-    // setName(wallet.address);
-    // localStorage.setItem("privateKey", privateKey);
-    // localStorage.setItem("name", wallet.address);
-    // console.log("Address: " + wallet.address);
+    const response = await axios.post("/api/register");
+    if (response.data.success) {
+      const { user } = response.data;
+      localStorage.setItem("privatekey", user.privateKey);
+      localStorage.setItem("publicKey", user.publicKey);
+      localStorage.setItem("wallet", user.wallet);
+      localStorage.setItem("walletKey", user.walletKey);
+    } else {
+      alert("Something went wrong");
+    }
+    console.log(response);
   };
 
   return (
@@ -57,13 +58,13 @@ const Login = () => {
         <Link
           onClick={(e) => (!name || !room ? e.preventDefault() : null)}
           to={`/chat?name=${name}&room=${room}`}
-          style={{marginRight: "10px"}}
+          style={{ marginRight: "10px" }}
         >
           <input type="submit" className="form-submit" value="Log In" />
         </Link>
 
         <Link onClick={(e) => genrateNewWallet(e)} to="/">
-          <input type="submit" className="form-submit" value="Genrate Wallet" />
+          <input type="submit" className="form-submit" value="Generate Wallet" />
         </Link>
       </form>
     </div>

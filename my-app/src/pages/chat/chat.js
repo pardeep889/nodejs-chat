@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import './chat.css'
-import {AES} from "crypto-js";
+import { JSEncrypt } from "jsencrypt";
 
 
 let socket;
@@ -59,15 +59,6 @@ const Chat = () => {
 
     const sendMessage = (e) => {
         e.preventDefault();
-        // const ciphertext = AES.encrypt(JSON.stringify(message), localStorage.getItem("privateKey")).toString();
-
-
-
-        // var bytes = CryptoJS.AES.decrypt(ciphertext, localStorage.getItem("privateKey"));
-        // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        // console.log(decryptedData);
-        // return;
-       
         socket.emit('sendMessage', message, () => setMessage(""))
         setTimeout(() => {
             var div = document.getElementById("chat_body");
